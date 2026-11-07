@@ -4,13 +4,35 @@ const path = require('path');
 
 const ROOT = __dirname;
 const UPLOAD_DIR = path.join(ROOT, 'uploads');
-const database = require('./db');
-const { readTracks, saveTracks, readMembers, readGroupMembers } = database;
+const DATA_DIR = path.join(ROOT, 'data');
+const DB_FILE = path.join(DATA_DIR, 'tracks.json');
+const VISITORS_FILE = path.join(DATA_DIR, 'visitors.json');
+const MEMBERS_FILE = path.join(DATA_DIR, 'members.json');
+const GROUP_MEMBERS_FILE = path.join(DATA_DIR, 'group-members.json');
 const PORT = Number(process.env.PORT || 3000);
 const MAX_FILE_SIZE = 50 * 1024 * 1024;
 const allowedExtensions = new Set(['.mp3', '.wav', '.m4a', '.ogg', '.opus', '.aac', '.flac']);
 const onlineVisitors = new Map();
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
+fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(DB_FILE)) fs.writeFileSync(DB_FILE, '[]\n', 'utf8');
+if (!fs.existsSync(VISITORS_FILE)) fs.writeFileSync(VISITORS_FILE, '{"total":0,"visitorHashes":[]}\n', 'utf8');
+if (!fs.existsSync(MEMBERS_FILE)) fs.writeFileSync(MEMBERS_FILE, '[]\n', 'utf8');
+if (!fs.existsSync(GROUP_MEMBERS_FILE)) fs.writeFileSync(GROUP_MEMBERS_FILE, '[]\n', 'utf8');
+
+function readTracks() {
+  try { const tracks = JSON.parse(fs.readFileSync(DB_FILE, 'utf8')); return Array.isArray(tracks) ? tracks : []; }
+  catch { return []; }
+}
+function saveTracks(tracks) { fs.writeFileSync(DB_FILE, `${JSON.stringify(tracks, null, 2)}\n`, 'utf8'); }
+function readMembers() { try { const members = JSON.parse(fs.readFileSync(MEMBERS_FILE, 'utf8')); return Array.isArray(members) ? members : []; } catch { return []; } }
+function saveMembers(members) { fs.writeFileSync(MEMBERS_FILE, `${JSON.stringify(members, null, 2)}\n`, 'utf8'); }
+function readGroupMembers() { try { const members = JSON.parse(fs.readFileSync(GROUP_MEMBERS_FILE, 'utf8')); return Array.isArray(members) ? members : []; } catch { return []; } }
+function saveGroupMembers(members) { fs.writeFileSync(GROUP_MEMBERS_FILE, `${JSON.stringify(members, null, 2)}\n`, 'utf8'); }
+function readVisitorData() {
+  try { const data = JSON.parse(fs.readFileSync(VISITORS_FILE, 'utf8')); return { total: Number(data.total) || 0, visitorHashes: Array.isArray(data.visitorHashes) ? data.visitorHashes : [] }; }
+  catch { return { total: 0, visitorHashes: [] }; }
+}
 function getCookie(req, name) {
   const pair = (req.headers.cookie || '').split(';').map(value => value.trim()).find(value => value.startsWith(`${name}=`));
   return pair ? decodeURIComponent(pair.slice(name.length + 1)) : '';
@@ -213,9 +235,14 @@ const server = http.createServer(async (req, res) => {
       headers['Set-Cookie'] = `laos_remix_visitor=${visitorId}; Path=/; Max-Age=31536000; HttpOnly; SameSite=Lax${secure}`;
     }
     const visitorHash = require('crypto').createHash('sha256').update(visitorId).digest('hex');
-    const visitorTotal = database.registerVisitor(visitorHash);
+    const visitors = readVisitorData();
+    if (!visitors.visitorHashes.includes(visitorHash)) {
+      visitors.visitorHashes.push(visitorHash);
+      visitors.total = visitors.visitorHashes.length;
+      fs.writeFileSync(VISITORS_FILE, `${JSON.stringify(visitors)}\n`, 'utf8');
+    }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', ...headers });
-    return res.end(JSON.stringify({ visitors: visitorTotal }));
+    return res.end(JSON.stringify({ visitors: visitors.total }));
   }
   if (url.pathname === '/api/presence' && req.method === 'GET') {
     let visitorId = getCookie(req, 'laos_remix_visitor');
@@ -233,7 +260,7 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ online: onlineVisitors.size }));
   }
   if (url.pathname === '/api/version' && req.method === 'GET') {
-    const files = ['index.html', 'app.js', 'style.css', 'upload.html', 'upload-page.js', 'producers.html', 'producers.js', 'group-members.html', 'group-members.js'];
+    const files = ['index.html', 'app.js', 'style.css', 'upload.html', 'upload-page.js', 'producers.html', 'producers.js', 'group-members.html', 'group-members.js', 'admin.js'];
     const version = files.map(file => { try { const stat = fs.statSync(path.join(ROOT, file)); return `${stat.mtimeMs}-${stat.size}`; } catch { return 'missing'; } }).join('|');
     return send(res, 200, { version }, 'application/json; charset=utf-8');
   }
@@ -245,7 +272,7 @@ const server = http.createServer(async (req, res) => {
     try {
       const body = await receiveBody(req); if (body.length > 8 * 1024) return send(res, 413, { error: 'ข้อมูลใหญ่เกินกำหนด' });
       const name = safeText(JSON.parse(body.toString('utf8')).name, 60); if (!name) return send(res, 400, { error: 'กรุณากรอกชื่อสมาชิก' });
-      const member = { id: require('crypto').randomUUID(), name, createdAt: Date.now() }; database.addGroupMember(member);
+      const member = { id: require('crypto').randomUUID(), name, createdAt: Date.now() }, members = readGroupMembers(); members.push(member); saveGroupMembers(members);
       return send(res, 201, { member });
     } catch (error) { return send(res, 400, { error: error.message || 'เพิ่มรายชื่อไม่สำเร็จ' }); }
   }
@@ -253,8 +280,9 @@ const server = http.createServer(async (req, res) => {
   if (groupMemberMatch && req.method === 'DELETE') {
     const address = req.socket.remoteAddress || '';
     if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address) || req.headers['cf-connecting-ip']) return send(res, 403, { error: 'จัดการรายชื่อได้จากเครื่องเจ้าของเว็บเท่านั้น' });
-    if (!database.deleteGroupMember(decodeURIComponent(groupMemberMatch[1]))) return send(res, 404, { error: 'ไม่พบรายชื่อนี้' });
-    return send(res, 200, { deleted: true });
+    const members = readGroupMembers(), index = members.findIndex(member => member.id === decodeURIComponent(groupMemberMatch[1]));
+    if (index < 0) return send(res, 404, { error: 'ไม่พบรายชื่อนี้' });
+    members.splice(index, 1); saveGroupMembers(members); return send(res, 200, { deleted: true });
   }
   if (url.pathname === '/api/members' && req.method === 'POST') {
     const address = req.socket.remoteAddress || '';
@@ -266,7 +294,7 @@ const server = http.createServer(async (req, res) => {
       if (!name) return send(res, 400, { error: 'กรุณากรอกชื่อสมาชิก' });
       const data = JSON.parse(body.toString('utf8'));
       const member = { id: require('crypto').randomUUID(), name, description: safeText(data.description, 500), facebook: cleanMemberSocial(data.facebook), tiktok: cleanMemberSocial(data.tiktok), instagram: cleanMemberSocial(data.instagram), whatsapp: cleanMemberSocial(data.whatsapp, 80), createdAt: Date.now() };
-      database.addMember(member);
+      const members = readMembers(); members.push(member); saveMembers(members);
       return send(res, 201, { member });
     } catch (error) { return send(res, 400, { error: error.message || 'เพิ่มรายชื่อไม่สำเร็จ' }); }
   }
@@ -276,18 +304,19 @@ const server = http.createServer(async (req, res) => {
     if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address) || req.headers['cf-connecting-ip']) return send(res, 403, { error: 'จัดการรายชื่อได้จากเครื่องเจ้าของเว็บเท่านั้น' });
     try {
       const body = await receiveBody(req); if (body.length > 8 * 1024) return send(res, 413, { error: 'ข้อมูลใหญ่เกินกำหนด' });
-      const data = JSON.parse(body.toString('utf8')), fields = { description: safeText(data.description, 500) };
-      for (const key of ['facebook', 'tiktok', 'instagram', 'whatsapp']) fields[key] = cleanMemberSocial(data[key], key === 'whatsapp' ? 80 : 240);
-      const member = database.updateMember(decodeURIComponent(memberMatch[1]), fields);
+      const data = JSON.parse(body.toString('utf8')), members = readMembers(), member = members.find(item => item.id === decodeURIComponent(memberMatch[1]));
       if (!member) return send(res, 404, { error: 'ไม่พบรายชื่อนี้' });
-      return send(res, 200, { member });
+      member.description = safeText(data.description, 500);
+      for (const key of ['facebook', 'tiktok', 'instagram', 'whatsapp']) member[key] = cleanMemberSocial(data[key], key === 'whatsapp' ? 80 : 240);
+      saveMembers(members); return send(res, 200, { member });
     } catch (error) { return send(res, 400, { error: error.message || 'บันทึกข้อมูลไม่สำเร็จ' }); }
   }
   if (memberMatch && req.method === 'DELETE') {
     const address = req.socket.remoteAddress || '';
     if (!['127.0.0.1', '::1', '::ffff:127.0.0.1'].includes(address) || req.headers['cf-connecting-ip']) return send(res, 403, { error: 'จัดการรายชื่อได้จากเครื่องเจ้าของเว็บเท่านั้น' });
-    if (!database.deleteMember(decodeURIComponent(memberMatch[1]))) return send(res, 404, { error: 'ไม่พบรายชื่อนี้' });
-    return send(res, 200, { deleted: true });
+    const members = readMembers(), index = members.findIndex(member => member.id === decodeURIComponent(memberMatch[1]));
+    if (index < 0) return send(res, 404, { error: 'ไม่พบรายชื่อนี้' });
+    members.splice(index, 1); saveMembers(members); return send(res, 200, { deleted: true });
   }
   if (url.pathname === '/api/tracks' && req.method === 'GET') {
     const tracks = readTracks(); let changed = false;
@@ -381,7 +410,11 @@ const server = http.createServer(async (req, res) => {
       if (!entries.length) return send(res, 404, { error: 'ไม่พบไฟล์เพลงใน Folder นี้' });
       const archive = createZip(entries);
       const downloadedIds = new Set(entries.map(entry => entry.trackId));
-      database.incrementDownloads([...downloadedIds]);
+      for (const track of tracks) if (downloadedIds.has(track.id)) track.downloads = (Number(track.downloads) || 0) + 1;
+      saveTracks(readTracks().map(track => {
+        const downloaded = tracks.find(item => item.id === track.id);
+        return downloaded ? { ...track, downloads: downloaded.downloads } : track;
+      }));
       const folderName = safeText(tracks[0].folderName, 80) || 'LAOS-REMIX-Folder';
       res.writeHead(200, { 'Content-Type': 'application/zip', 'Content-Length': archive.length, 'Content-Disposition': `attachment; filename="LAOS-REMIX-Folder.zip"; filename*=UTF-8''${encodeURIComponent(folderName)}.zip`, 'X-Content-Type-Options': 'nosniff', 'Cache-Control': 'no-store' });
       return res.end(archive);
@@ -420,7 +453,8 @@ const server = http.createServer(async (req, res) => {
       status = 206; headers['Content-Range'] = `bytes ${start}-${end}/${stat.size}`;
     }
     headers['Content-Length'] = end - start + 1;
-    if (!req.headers.range || start === 0) database.incrementDownloads([track.id]);
+    track.downloads = (Number(track.downloads) || 0) + 1;
+    saveTracks(tracks);
     res.writeHead(status, headers);
     const stream = fs.createReadStream(filePath, { start, end });
     stream.on('error', error => { if (!res.headersSent) send(res, 500, { error: 'อ่านไฟล์เพลงไม่สำเร็จ' }); else res.destroy(error); });
@@ -444,7 +478,7 @@ const server = http.createServer(async (req, res) => {
       if (!allowedExtensions.has(ext)) return send(res, 400, { error: 'รองรับ MP3, WAV, M4A, OGG, OPUS, AAC และ FLAC' });
       const storedName = `${Date.now()}-${require('crypto').randomBytes(6).toString('hex')}${ext}`;
       fs.writeFileSync(path.join(UPLOAD_DIR, storedName), file.content, { flag: 'wx' });
-      const track = { id: storedName, uploadedAt: Date.now(), title, artist, collection, genre, duration: '—:—', downloads: 0, fileUrl: `/uploads/${storedName}`, fileName: path.basename(file.originalName), coverChecked: true };
+      const track = { id: storedName, title, artist, collection, genre, duration: '—:—', downloads: 0, fileUrl: `/uploads/${storedName}`, fileName: path.basename(file.originalName), coverChecked: true };
       if (folderId && folderName) { track.folderId = folderId; track.folderName = folderName; }
       const cover = extractEmbeddedCover(file.content, ext);
       if (cover) {
@@ -453,7 +487,8 @@ const server = http.createServer(async (req, res) => {
         fs.writeFileSync(path.join(UPLOAD_DIR, coverName), cover.bytes);
         track.coverUrl = `/uploads/${coverName}`;
       }
-      database.addTrack(track);
+      const tracks = readTracks(); tracks.unshift(track);
+      saveTracks(tracks);
       return send(res, 201, { track });
     } catch (error) {
       if (!res.headersSent && !res.destroyed) return send(res, error.statusCode || 500, { error: error.message || 'บันทึกเพลงไม่สำเร็จ' });

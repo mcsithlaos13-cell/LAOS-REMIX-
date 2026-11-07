@@ -1,0 +1,25 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "laos-remix",
+  "main": "./worker.js",
+  "compatibility_date": "2026-11-08",
+  "assets": {
+    "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sith",
+      "database_id": "4adf065d-7215-4ca9-bc44-14ecc481f813",
+      "migrations_dir": "./migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "laos-remix-media"
+    }
+  ]
+}

@@ -14,7 +14,7 @@
   <header class="topbar">
     <a class="brand" href="#top" aria-label="LAOS REMIX หน้าแรก"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a>
     <nav><a class="nav-link active" href="#music">เพลงทั้งหมด</a><a class="nav-link" href="group-members.html">สมาชิกกลุ่ม</a><a class="nav-link" href="producers.html">คนรับทำเพลง</a><a class="nav-link" href="upload.html">อัปโหลดเพลง</a><a class="nav-link facebook-link" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">กลุ่ม Facebook ↗</a></nav>
-    <a class="top-cta" href="upload.html"><span>＋</span> อัปโหลดเพลง</a>
+    <div class="topbar-actions"><button class="admin-access" id="admin-access" type="button">เข้าสู่ระบบเจ้าของเว็บ</button><a class="top-cta" href="upload.html"><span>＋</span> อัปโหลดเพลง</a></div>
   </header>
 
   <main id="top">
@@ -63,6 +63,6 @@
     <div class="np-volume" id="np-volume-control"><button class="np-volume-toggle" id="np-volume-toggle" aria-label="เปิดปรับระดับเสียง" aria-expanded="false">♪</button><div class="np-volume-panel" id="np-volume-panel"><button id="np-volume-down" aria-label="ลดเสียง">−</button><input id="np-volume" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="ระดับเสียง"><button id="np-volume-up" aria-label="เพิ่มเสียง">+</button></div></div>
   </aside>
   <footer><a class="brand" href="#top"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><span>เสียงเพลงเชื่อมเราเข้าด้วยกัน <span class="footer-heart">♥</span></span><span>© 2025 LAOS REMIX</span></footer>
-  <script src="app.js"></script>
+  <script src="admin.js"></script><script src="app.js"></script>
 </body>
 </html>
