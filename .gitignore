@@ -10,3 +10,5 @@ data/visitors.json
 data/*.db
 data/*.db-shm
 data/*.db-wal
+backups/
+backup.log
