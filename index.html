@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#11110f" />
+  <meta name="theme-color" content="#0b100e" />
   <title>LAOS REMIX — แจกเพลงรีมิกซ์</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,8 +13,8 @@
 <body>
   <header class="topbar">
     <a class="brand" href="#top" aria-label="LAOS REMIX หน้าแรก"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a>
-    <nav><a class="nav-link active" href="#music">เพลงทั้งหมด</a><a class="nav-link" href="#upload">อัปโหลดเพลง</a></nav>
-    <a class="top-cta" href="#upload"><span>＋</span> ส่งเพลงของคุณ</a>
+    <nav><a class="nav-link active" href="#music">เพลงทั้งหมด</a><a class="nav-link" href="group-members.html">สมาชิกกลุ่ม</a><a class="nav-link" href="producers.html">คนรับทำเพลง</a><a class="nav-link" href="upload.html">อัปโหลดเพลง</a><a class="nav-link facebook-link" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">กลุ่ม Facebook ↗</a></nav>
+    <a class="top-cta" href="upload.html"><span>＋</span> อัปโหลดเพลง</a>
   </header>
 
   <main id="top">
@@ -23,8 +23,8 @@
         <div class="eyebrow"><span class="live-dot"></span> เสียงใหม่จากลาวและทั่วเอเชีย</div>
         <h1>เปิดโลกเพลง<br><em>รีมิกซ์</em> ไปด้วยกัน</h1>
         <p>พื้นที่แบ่งปันเพลงรีมิกซ์ดี ๆ ฟังง่าย โหลดสะดวก<br class="desktop-only"> และส่งผลงานของคุณให้ทุกคนได้ค้นพบ</p>
-        <div class="hero-actions"><a class="button primary" href="#music">▶&nbsp; เลือกฟังเพลง</a><a class="text-link" href="#upload">อัปโหลดเพลง <span>↗</span></a></div>
-        <div class="hero-stats"><div><strong id="song-count">04</strong><span>เพลงในคลัง</span></div><i></i><div><strong>24/7</strong><span>ฟังได้ทุกเวลา</span></div><i></i><div><strong>LAO</strong><span>เสียงจากบ้านเรา</span></div></div>
+        <div class="hero-actions"><a class="button primary" href="#music">▶&nbsp; เลือกฟังเพลง</a><a class="text-link" href="upload.html">อัปโหลดเพลง <span>↗</span></a><a class="text-link facebook-hero-link" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">เข้ากลุ่ม Facebook ↗</a></div>
+        <div class="hero-stats"><div><strong id="song-count">04</strong><span>เพลงในคลัง</span></div><i></i><div><strong id="visitor-count">—</strong><span>ผู้เข้าชมโดยประมาณ</span></div><i></i><div><strong>LAO</strong><span>เสียงจากบ้านเรา</span></div></div>
       </div>
       <div class="hero-art" aria-label="ภาพประกอบเครื่องเล่นเพลง">
         <div class="sun"></div><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
@@ -38,33 +38,29 @@
     <section class="music-section" id="music">
       <div class="catalog-toolbar">
         <div class="catalog-filters">
-          <label>แนวเพลง <select id="genre-filter"><option value="all">ทั้งหมด</option><option value="remix">รีมิกซ์</option><option value="lao">เพลงลาว</option><option value="other">อื่น ๆ</option></select></label>
-          <label>เรียงตาม <select id="sort-order"><option value="staff">แนะนำ</option><option value="newest">อัปโหลดล่าสุด</option><option value="title">ชื่อเพลง</option></select></label>
+          <label>แนวเพลง <select id="genre-filter"><option value="all">ทั้งหมด</option><option value="lao">เพลงลาว</option><option value="other">อื่น ๆ</option></select></label>
+          <label>เรียงตาม <select id="sort-order"><option value="staff">แนะนำ</option><option value="top">Top ดาวน์โหลด</option><option value="newest">อัปโหลดล่าสุด</option><option value="title">ชื่อเพลง</option></select></label>
         </div>
-        <div class="catalog-tools"><label class="highlight-toggle"><input id="highlights-toggle" type="checkbox"><span class="toggle-ui"></span> เพลงแนะนำ</label><button class="filter-toggle" id="show-favorites">♡ เพลงโปรด</button><button class="filter-toggle" id="toggle-filters">☷ ตัวกรอง</button></div>
+        <div class="catalog-tools"><label class="highlight-toggle"><input id="highlights-toggle" type="checkbox"><span class="toggle-ui"></span> เพลงแนะนำ</label><button class="filter-toggle" id="show-favorites">♡ บันทึกไว้</button><button class="filter-toggle" id="toggle-filters">☷ ตัวกรอง</button></div>
       </div>
-      <div class="section-head catalog-title"><div><div class="eyebrow muted">BROWSE THE MIX</div><h2>คลังเพลง <span>✳</span></h2></div><span class="catalog-count"><b id="catalog-count">04</b> เพลง</span></div>
-      <div class="track-list" id="track-list"></div>
-      <div class="empty-state" id="empty-state" hidden>ยังไม่มีเพลงในหมวดนี้ ลองเลือก “ทั้งหมด” ดูนะ</div>
+      <div class="section-head catalog-title"><div><div class="eyebrow muted">BROWSE THE MIX</div><h2>คลังเพลง <span>✳</span></h2></div><span class="catalog-count"><b id="catalog-count">04</b> เพลง <span class="online-status"><i></i><b id="online-count">0</b> ออนไลน์</span></span></div>
+      <div class="catalog-layout">
+        <nav class="category-sidebar" aria-label="รายการเพลง">
+          <button class="category-link active" type="button" data-collection="all"><span>♫</span> เพลงทั้งหมด</button>
+          <button class="category-link" type="button" data-collection="remix"><span>◉</span> รีมิกซ์</button>
+          <button class="category-link" type="button" data-collection="credit"><span>♬</span> ซาวด์เครดิต</button>
+          <button class="category-link" type="button" data-collection="folders"><span>▰</span> เพลง Set</button>
+        </nav>
+        <div class="catalog-results"><div class="folder-browser" id="folder-browser" hidden></div><div class="track-list" id="track-list"></div><div class="empty-state" id="empty-state" hidden>ยังไม่มีเพลงในหมวดนี้ ลองเลือกหมวดอื่นดูนะ</div></div>
+      </div>
     </section>
 
-    <section class="upload-section" id="upload">
-      <div class="upload-intro"><div class="eyebrow"><span class="upload-icon">↥</span> SHARE YOUR SOUND</div><h2>มีเพลงเด็ด?<br><em>ส่งมาให้ฟังหน่อย</em></h2><p>อัปโหลดผลงานของคุณ แล้วมาเป็นส่วนหนึ่ง<br>ของชุมชน LAOS REMIX</p><div class="upload-note">♪ &nbsp;รองรับไฟล์ MP3, WAV, M4A และ OGG</div></div>
-      <form class="upload-card" id="upload-form">
-        <label class="dropzone" id="dropzone" for="audio-file"><span class="cloud-icon">↥</span><strong>ลากไฟล์เพลงมาวางที่นี่</strong><span>หรือ <u>เลือกไฟล์จากเครื่อง</u></span><small>MP3, WAV, M4A, OGG · สูงสุด 50 MB</small></label>
-        <input id="audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg" hidden />
-        <div class="file-preview" id="file-preview" hidden></div>
-        <label class="field-label" for="track-title">ชื่อเพลง</label><input class="text-input" id="track-title" name="title" placeholder="เช่น ใจสั่งมา (Remix)" maxlength="80" required />
-        <div class="field-row"><div><label class="field-label" for="artist">ศิลปิน / ผู้รีมิกซ์</label><input class="text-input" id="artist" name="artist" placeholder="ชื่อของคุณ" maxlength="60" required /></div><div><label class="field-label" for="genre">แนวเพลง</label><select class="text-input" id="genre" name="genre"><option value="remix">รีมิกซ์</option><option value="lao">เพลงลาว</option><option value="other">อื่น ๆ</option></select></div></div>
-        <button class="button submit-button" type="submit">อัปโหลดเพลง <span>↗</span></button><div class="form-message" id="form-message" role="status"></div>
-        <p class="privacy-note">การอัปโหลดจะแสดงเพลงในหน้านี้บนอุปกรณ์นี้</p>
-      </form>
-    </section>
   </main>
+  <nav class="mobile-bottom-nav" aria-label="เมนูด่วน"><a href="index.html#music"><span>♫</span><small>เพลง</small></a><a href="group-members.html"><span>♙</span><small>สมาชิกกลุ่ม</small></a><a href="producers.html"><span>♪</span><small>คนรับทำเพลง</small></a><a href="upload.html"><span>＋</span><small>อัปโหลด</small></a></nav>
   <aside class="now-playing" id="now-playing" aria-label="เครื่องเล่นเพลง">
     <div class="np-track"><div class="np-cover" id="np-cover">LR</div><div><strong id="np-title">เลือกเพลงที่อยากฟัง</strong><span id="np-artist">LAOS REMIX</span></div><button class="np-like" id="np-like" aria-label="เพิ่มเพลงโปรด">♡</button></div>
-    <div class="np-controls"><div class="np-buttons"><button id="np-prev" aria-label="เพลงก่อนหน้า">◂</button><button class="np-play" id="np-play" aria-label="เล่นเพลง">▶</button><button id="np-next" aria-label="เพลงถัดไป">▸</button></div><div class="np-progress"><span id="np-current">0:00</span><input id="np-seek" type="range" min="0" max="100" value="0" aria-label="ตำแหน่งเพลง"><span id="np-duration">0:00</span></div></div>
-    <div class="np-volume"><span>♪</span><input id="np-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="ระดับเสียง"></div>
+    <div class="np-controls"><div class="np-buttons"><button id="np-shuffle" aria-label="สลับเพลง" aria-pressed="false" title="สลับเพลง">⤨</button><button id="np-prev" aria-label="เพลงก่อนหน้า">◂</button><button class="np-play" id="np-play" aria-label="เล่นเพลง">▶</button><button id="np-next" aria-label="เพลงถัดไป">▸</button></div><div class="np-progress"><span id="np-current">0:00</span><input id="np-seek" type="range" min="0" max="100" value="0" aria-label="ตำแหน่งเพลง"><span id="np-duration">0:00</span></div></div>
+    <div class="np-volume" id="np-volume-control"><button class="np-volume-toggle" id="np-volume-toggle" aria-label="เปิดปรับระดับเสียง" aria-expanded="false">♪</button><div class="np-volume-panel" id="np-volume-panel"><button id="np-volume-down" aria-label="ลดเสียง">−</button><input id="np-volume" type="range" min="0" max="1" step="0.05" value="0.8" aria-label="ระดับเสียง"><button id="np-volume-up" aria-label="เพิ่มเสียง">+</button></div></div>
   </aside>
   <footer><a class="brand" href="#top"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><span>เสียงเพลงเชื่อมเราเข้าด้วยกัน <span class="footer-heart">♥</span></span><span>© 2025 LAOS REMIX</span></footer>
   <script src="app.js"></script>

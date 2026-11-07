@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0b100e">
+  <title>คนรับทำเพลง — LAOS REMIX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="index.html"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><nav><a class="nav-link" href="index.html#music">เพลงทั้งหมด</a><a class="nav-link" href="group-members.html">สมาชิกกลุ่ม</a><a class="nav-link active" href="producers.html">คนรับทำเพลง</a><a class="nav-link" href="upload.html">อัปโหลดเพลง</a><a class="nav-link facebook-link" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">กลุ่ม Facebook ↗</a></nav><a class="top-cta" href="index.html"><span>←</span> กลับหน้าแรก</a></header>
+  <main class="producers-main">
+    <section class="producers-hero"><div class="eyebrow"><span class="live-dot"></span> MUSIC MAKERS DIRECTORY</div><h1>คนรับทำเพลง<br><em>ติดต่อได้ตรงนี้</em></h1><p>รวมรายชื่อคนรับทำเพลงและช่องทางติดต่อ<br>เลือกช่องทางที่สะดวกเพื่อเริ่มคุยงานได้เลย</p><div class="producer-total"><strong id="producer-count">00</strong><span>คนรับทำเพลงในรายการ</span></div></section>
+    <section class="producers-content"><div class="producers-section-head"><div><div class="eyebrow muted">CREATORS & CONTACTS</div><h2>รายชื่อผู้รับทำเพลง <span>✳</span></h2></div><span class="producer-tip">กดปุ่มช่องทางเพื่อติดต่อ</span></div><div class="producer-grid" id="producer-grid" aria-live="polite"><p class="members-empty">กำลังโหลดรายชื่อ…</p></div>
+      <form class="member-form producer-form" id="producer-form" hidden><label for="producer-name">เพิ่มรายชื่อคนรับทำเพลง</label><div class="member-input-grid"><input id="producer-name" name="name" maxlength="60" placeholder="ชื่อหรือชื่อในวงการ" required><textarea name="description" maxlength="500" placeholder="รายละเอียดงาน เช่น รับทำเพลงแนวไหน หรือบริการอะไร"></textarea><input name="facebook" maxlength="240" placeholder="ลิงก์ Facebook"><input name="tiktok" maxlength="240" placeholder="ลิงก์ TikTok"><input name="instagram" maxlength="240" placeholder="ลิงก์ Instagram"><input name="whatsapp" maxlength="80" placeholder="WhatsApp: ลิงก์หรือเบอร์โทร"><button type="submit">＋ เพิ่มรายชื่อ</button></div></form>
+    </section>
+  </main>
+  <nav class="mobile-bottom-nav" aria-label="เมนูด่วน"><a href="index.html#music"><span>♫</span><small>เพลง</small></a><a href="group-members.html"><span>♙</span><small>สมาชิกกลุ่ม</small></a><a class="active" href="producers.html"><span>♪</span><small>คนรับทำเพลง</small></a><a href="upload.html"><span>＋</span><small>อัปโหลด</small></a></nav>
+  <dialog class="producer-dialog" id="producer-dialog"><button class="producer-dialog-close" type="button" aria-label="ปิดรายละเอียด">×</button><div id="producer-dialog-content"></div></dialog>
+  <footer><a class="brand" href="index.html"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><span>เสียงเพลงเชื่อมเราเข้าด้วยกัน <span class="footer-heart">♥</span></span><span>© 2025 LAOS REMIX</span></footer>
+  <script src="producers.js"></script>
+</body>
+</html>

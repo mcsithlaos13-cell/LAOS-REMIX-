@@ -1,5 +1,9 @@
 node_modules/
+.tools/
 uploads/*
 !uploads/.gitkeep
 data/tracks.json
+data/members.json
+data/group-members.json
+data/visitors.json
 *.log

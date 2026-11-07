@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b100e" />
+  <title>อัปโหลดเพลง — LAOS REMIX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="upload-page">
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="LAOS REMIX หน้าแรก"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a>
+    <nav><a class="nav-link" href="index.html#music">เพลงทั้งหมด</a><a class="nav-link active" href="upload.html">อัปโหลดเพลง</a><a class="nav-link facebook-link" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">กลุ่ม Facebook ↗</a></nav>
+    <a class="top-cta" href="index.html#music"><span>♫</span> กลับไปฟังเพลง</a>
+  </header>
+  <main>
+    <section class="upload-section" id="upload">
+      <div class="upload-intro"><div class="eyebrow"><span class="upload-icon">↥</span> SHARE YOUR SOUND</div><h2>มีเพลงเด็ด?<br><em>ส่งมาให้ฟังหน่อย</em></h2><p>อัปโหลดผลงานของคุณ แล้วมาเป็นส่วนหนึ่ง<br>ของชุมชน LAOS REMIX</p><div class="upload-note">♪ &nbsp;รองรับ MP3, WAV, M4A, OGG, OPUS, AAC และ FLAC</div><a class="facebook-join" href="https://www.facebook.com/share/g/1awvDx6CTP/" target="_blank" rel="noopener noreferrer">เข้าร่วมกลุ่ม Facebook ↗</a></div>
+      <form class="upload-card" id="upload-form">
+        <label class="dropzone" id="dropzone" for="audio-file"><span class="cloud-icon">↥</span><strong>ลากไฟล์เพลงมาวางที่นี่</strong><span>หรือ <u>เลือกเพลงจากเครื่อง</u></span><small>เลือกได้หลายเพลง · ไฟล์ละสูงสุด 50 MB</small></label>
+        <input id="audio-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.opus,.aac,.flac" multiple hidden />
+        <input id="folder-file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.opus,.aac,.flac" webkitdirectory multiple hidden />
+        <button class="folder-pick" id="folder-pick" type="button">▧ &nbsp;เลือกทั้งโฟลเดอร์</button>
+        <div class="file-preview" id="file-preview" hidden></div>
+        <label class="field-label" for="track-title">ชื่อเพลง <span class="title-hint">หลายไฟล์ใช้ชื่อไฟล์เป็นชื่อเพลง</span></label><input class="text-input" id="track-title" name="title" placeholder="เพลงเดี่ยว: พิมพ์ชื่อเพลง · หลายเพลง: ใช้ชื่อไฟล์" maxlength="80" />
+        <div class="field-row upload-metadata"><div><label class="field-label" for="artist">ศิลปิน / ผู้รีมิกซ์</label><input class="text-input" id="artist" name="artist" placeholder="ชื่อของคุณ" maxlength="60" required /></div><div><label class="field-label" for="collection">รายการเพลง</label><select class="text-input" id="collection" name="collection"><option value="auto">จัดให้อัตโนมัติ</option><option value="remix">รีมิกซ์</option><option value="credit">ซาวด์เครดิต</option><option value="folder">เพลง Set</option></select></div><div><label class="field-label" for="genre">แนวเพลง</label><select class="text-input" id="genre" name="genre"><option value="auto">จัดให้อัตโนมัติ</option><option value="other">อื่น ๆ</option><option value="lao">เพลงลาว</option></select></div></div>
+        <div class="folder-name-row" id="folder-name-row" hidden><label class="field-label" for="folder-name">ชื่อเพลง Set</label><input class="text-input" id="folder-name" maxlength="80" placeholder="เช่น เพลงใหม่ของฉัน" /></div>
+        <p class="category-auto-note">อัตโนมัติ: ชื่อไฟล์/โฟลเดอร์ที่มีคำว่า “เครดิต” จัดเป็นซาวด์เครดิต และคำว่า “ลาว” จัดเป็นเพลงลาว หากไม่พบจะใช้รีมิกซ์ / อื่น ๆ</p>
+        <button class="button submit-button" type="submit">อัปโหลดเพลง <span>↗</span></button><div class="form-message" id="form-message" role="status"></div>
+        <p class="privacy-note">แต่ละเพลงจะเป็นรายการแยกในคลัง LAOS REMIX</p>
+      </form>
+    </section>
+  </main>
+  <div class="upload-overlay" id="upload-overlay" hidden role="dialog" aria-modal="true" aria-labelledby="upload-status-title">
+    <div class="upload-status-card"><div class="upload-status-icon" id="upload-status-icon" aria-hidden="true">↥</div><p class="eyebrow">LAOS REMIX</p><h2 id="upload-status-title">กำลังอัปโหลดเพลง</h2><p id="upload-status-text">กรุณารอสักครู่ อย่าปิดหน้านี้</p><div class="upload-status-progress" id="upload-status-progress"><span></span></div><button class="button upload-status-close" id="upload-status-close" type="button" hidden>เรียบร้อย</button></div>
+  </div>
+  <nav class="mobile-bottom-nav" aria-label="เมนูด่วน"><a href="index.html#music"><span>♫</span><small>เพลง</small></a><a href="group-members.html"><span>♙</span><small>สมาชิกกลุ่ม</small></a><a href="producers.html"><span>♪</span><small>คนรับทำเพลง</small></a><a class="active" href="upload.html"><span>＋</span><small>อัปโหลด</small></a></nav>
+  <footer><a class="brand" href="index.html"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><span>เสียงเพลงเชื่อมเราเข้าด้วยกัน <span class="footer-heart">♥</span></span><span>© 2025 LAOS REMIX</span></footer>
+  <script src="upload-page.js"></script>
+</body>
+</html>
