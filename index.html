@@ -36,7 +36,14 @@
     </section>
 
     <section class="music-section" id="music">
-      <div class="section-head"><div><div class="eyebrow muted">THE LATEST DROPS</div><h2>เพลงแนะนำ <span>✳</span></h2></div><div class="filters" role="group" aria-label="กรองรายการเพลง"><button class="filter active" data-filter="all">ทั้งหมด <small>04</small></button><button class="filter" data-filter="remix">รีมิกซ์</button><button class="filter" data-filter="lao">เพลงลาว</button></div></div>
+      <div class="catalog-toolbar">
+        <div class="catalog-filters">
+          <label>แนวเพลง <select id="genre-filter"><option value="all">ทั้งหมด</option><option value="remix">รีมิกซ์</option><option value="lao">เพลงลาว</option><option value="other">อื่น ๆ</option></select></label>
+          <label>เรียงตาม <select id="sort-order"><option value="staff">แนะนำ</option><option value="newest">อัปโหลดล่าสุด</option><option value="title">ชื่อเพลง</option></select></label>
+        </div>
+        <div class="catalog-tools"><label class="highlight-toggle"><input id="highlights-toggle" type="checkbox"><span class="toggle-ui"></span> เพลงแนะนำ</label><button class="filter-toggle" id="show-favorites">♡ เพลงโปรด</button><button class="filter-toggle" id="toggle-filters">☷ ตัวกรอง</button></div>
+      </div>
+      <div class="section-head catalog-title"><div><div class="eyebrow muted">BROWSE THE MIX</div><h2>คลังเพลง <span>✳</span></h2></div><span class="catalog-count"><b id="catalog-count">04</b> เพลง</span></div>
       <div class="track-list" id="track-list"></div>
       <div class="empty-state" id="empty-state" hidden>ยังไม่มีเพลงในหมวดนี้ ลองเลือก “ทั้งหมด” ดูนะ</div>
     </section>
@@ -54,6 +61,11 @@
       </form>
     </section>
   </main>
+  <aside class="now-playing" id="now-playing" aria-label="เครื่องเล่นเพลง">
+    <div class="np-track"><div class="np-cover" id="np-cover">LR</div><div><strong id="np-title">เลือกเพลงที่อยากฟัง</strong><span id="np-artist">LAOS REMIX</span></div><button class="np-like" id="np-like" aria-label="เพิ่มเพลงโปรด">♡</button></div>
+    <div class="np-controls"><div class="np-buttons"><button id="np-prev" aria-label="เพลงก่อนหน้า">◂</button><button class="np-play" id="np-play" aria-label="เล่นเพลง">▶</button><button id="np-next" aria-label="เพลงถัดไป">▸</button></div><div class="np-progress"><span id="np-current">0:00</span><input id="np-seek" type="range" min="0" max="100" value="0" aria-label="ตำแหน่งเพลง"><span id="np-duration">0:00</span></div></div>
+    <div class="np-volume"><span>♪</span><input id="np-volume" type="range" min="0" max="1" step="0.01" value="0.8" aria-label="ระดับเสียง"></div>
+  </aside>
   <footer><a class="brand" href="#top"><span class="brand-mark">LR</span><span>LAOS <b>REMIX</b></span></a><span>เสียงเพลงเชื่อมเราเข้าด้วยกัน <span class="footer-heart">♥</span></span><span>© 2025 LAOS REMIX</span></footer>
   <script src="app.js"></script>
 </body>
